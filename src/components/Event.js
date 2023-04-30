@@ -27,11 +27,11 @@ export default function Event({content}) {
     }
 
     return (
-        <Card sx={{ minWidth: 450, maxWidth: 450, m:2}}>
+        <Card sx={{ minWidth: 700, maxWidth: 700, m:2, pl: 1}} elevation={4}>
             <CardActionArea onClick={handleExpand} disableRipple>
                 <CardHeader
                     action={
-                    <Stack direction="row" spacing={-1} sx={{ml:-5}}>
+                    <Stack direction="row" spacing={-1} sx={{ml:-15}}>
                         <IconButton 
                         onMouseDown={(event) => event.stopPropagation()}
                         onClick={handleFavorite}>
@@ -48,7 +48,7 @@ export default function Event({content}) {
                     sx={{mb:-3}}
                     title="Event Name"
                     subheader={
-                        <Stack direction="row" spacing = {1}>
+                        <Stack sx={{pt:1}} direction="row" spacing = {1}>
                         <Chip size="small" icon={<EventIcon/>} label="00/00/0000 00:00"/>
                         <Chip size="small" icon ={<PlaceIcon/>} label="Event Location"/>
                         </Stack>

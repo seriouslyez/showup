@@ -4,9 +4,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 
-export default function EventList() {
+export default function EventPane() {
     return(
-        <Stack>
+        <Stack sx={{minHeight:"100vH"}}>
         <Typography variant = "h5" align="center">
             Event Category
         </Typography>
