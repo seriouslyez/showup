@@ -15,34 +15,43 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
-export default function Event({openFull}) {
+export default function PanelEvent({ openEmail }) {
     const [expanded, setExpand] = useState(false);
     const [favorited, setFavorite] = useState(false);
-
     const handleExpand = () => {
         setExpand(!expanded);
     };
-    const handleFavorite = () => {
+    const handleFavorite = (event) => {
         setFavorite(!favorited);
+        event.stopPropagation();
+    }
+
+    const removeEvent = (event) => {
+        event.stopPropagation();
+    }
+
+    const handleOpenEmail = (event) => {
+        openEmail(true);
+        event.stopPropagation();
     }
 
     return (
-        <Card sx={{ minWidth: 700, maxWidth: 700, m:2, pl: 1}} elevation={4}>
+        <Card sx={{ minWidth: 500, maxWidth: 500, m:2, pl: 1}} elevation={4}>
             <CardActionArea onClick={handleExpand} disableRipple>
                 <CardHeader
                     action={
                     <Stack direction="row" spacing={-1} sx={{ml:-15}}>
                         <IconButton 
                         onMouseDown={(event) => event.stopPropagation()}
-                        onClick={(event) => {event.stopPropagation(); handleFavorite()}}>
+                        onClick={handleFavorite}>
                             {favorited ? <FavoriteIcon/> : <FavBorderIcon/>}
                         </IconButton>
                         <IconButton onMouseDown={(event) => event.stopPropagation()}
-                        onClick={(event) => {event.stopPropagation()}}>
+                        onClick={removeEvent}>
                             <NotInterestedIcon/>
                         </IconButton>
                         <IconButton onMouseDown={(event) => event.stopPropagation()}
-                        onClick={(event) => {event.stopPropagation(); openFull(true)}}>
+                        onClick={handleOpenEmail}>
                             <MailOutlineIcon/>
                         </IconButton>
                     </Stack>
@@ -56,11 +65,13 @@ export default function Event({openFull}) {
                         </Stack>
                     }
                 />
+                {/* {!expanded ?  */}
                 <CardContent>
                     {/* <Typography paragraph>
                         Event Description
                     </Typography> */}
                 </CardContent>
+                {/* // :''} */}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                 <Typography paragraph sx={{mt:-2}}>

@@ -1,60 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import GoogleLogin from 'react-google-login';
-import { googleLogout } from '@react-oauth/google';
-import axios from 'axios';
+import Alert from '@mui/material/Alert';
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  // const [ user, setUser ] = useState([]);
-  // const [ profile, setProfile ] = useState([]);
-   
-  // const handleLogin = async googleData => {
-  //     const res = await fetch("/api/v1/auth/google", {
-  //         method: "POST",
-  //         body: JSON.stringify({
-  //         token: googleData.tokenId
-  //       }),
-  //       headers: {
-  //         "Content-Type": "application/json"
-  //       }
-  //     })
-  //     const data = await res.json()
-  //     // store returned user somehow
-  // };
-
-  // useEffect(() => {
-  //   if (user) {
-  //     axios
-  //       .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
-  //           headers: {
-  //               Authorization: `Bearer ${user.access_token}`,
-  //               Accept: 'application/json'
-  //           }
-  //       })
-  //       .then((res) => {
-  //           setProfile(res.data);
-  //       })
-  //       .catch((err) => console.log(err));
-  //     }
-  // },[ user ]);
-
-  // const logOut = () => {
-  //   googleLogout();
-  //   setProfile(null);
-  // };
+  const [formError, setFormError] = useState(false);
+  const navigate = useNavigate();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+    if (data.get('email') != '' && data.get('password') != '') {
+      navigate("/home");
+    }
+    else {
+      setFormError(true);
+    }
+  };
 
   return (
     <Stack sx={{mt:"30vh"}} alignItems="center">
-    {/* <Typography variant="h2" sx={{mb:5}}>
+    <Typography variant="h2">
       showUP
-    </Typography> */}
-    {/* <GoogleLogin
-        buttonText="Log in with Google"
-        onSuccess={handleLogin}
-        onFailure={handleLogin}
-        cookiePolicy={'single_host_origin'}
-    /> */}
+    </Typography>
+    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          {formError ? <Alert severity="error">
+            Please make sure all fields are completed!
+          </Alert> : ''}
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Google Email Address"
+              name="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+    </Box>
     </Stack>
   );
 }
