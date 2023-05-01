@@ -23,8 +23,16 @@ export default function EventNav() {
     //     setNavAll(!selectedAll);   
     // }
 
-    const handleLogout = () => {
+    async function handleLogout() {
         navigate('/');
+        await fetch('/api/world', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: '', password: '' }),
+          });
+
     }
 
     const handleEventSelect = (this_name) => {
