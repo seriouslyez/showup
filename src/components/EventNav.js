@@ -9,7 +9,6 @@ import IconButton from '@mui/material/IconButton';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useNavigate } from "react-router-dom";
 
-
 export default function EventNav() {
     const navigate = useNavigate();
     // List of event categories (preset)

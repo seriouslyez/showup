@@ -14,6 +14,7 @@ import FavBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import ParseData from '../components/Parse'
 
 export default function Event({openFull}) {
     const [expanded, setExpand] = useState(false);
