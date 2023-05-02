@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -15,9 +15,10 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
-export default function PanelEvent({ openEmail }) {
+export default function PanelEvent({Event, openEmail }) {
     const [expanded, setExpand] = useState(false);
     const [favorited, setFavorite] = useState(false);
+
     const handleExpand = () => {
         setExpand(!expanded);
     };
@@ -57,11 +58,11 @@ export default function PanelEvent({ openEmail }) {
                     </Stack>
                     }
                     sx={{mb:-3}}
-                    title="Event Name"
+                    title={<Typography variant="h6"> {Event.name}</Typography>}
                     subheader={
                         <Stack sx={{pt:1}} direction="row" spacing = {1}>
-                        <Chip size="small" icon={<EventIcon/>} label="00/00/0000 00:00"/>
-                        <Chip size="small" icon ={<PlaceIcon/>} label="Event Location"/>
+                        <Chip size="small" icon={<EventIcon/>} label={Event.date + '\xa0\xa0' + Event.time}/>
+                        <Chip size="small" icon ={<PlaceIcon/>} label={Event.location}/>
                         </Stack>
                     }
                 />
@@ -75,7 +76,7 @@ export default function PanelEvent({ openEmail }) {
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                 <Typography paragraph sx={{mt:-2}}>
-                    Event Description
+                    {Event.summary}
                 </Typography>
                 </CardContent>
             </Collapse>

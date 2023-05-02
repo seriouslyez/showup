@@ -6,8 +6,20 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+const { Configuration, OpenAIApi } = require('openai')
+
+const configuration = new Configuration({
+  apiKey: "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",
+});
+
+const openai = new OpenAIApi(configuration);
+
 const app = express();
 const port = process.env.PORT || 5001;
+
+var cors = require('cors')
+app.use(bodyParser.json());
+app.use(cors())
 
 let emails = {}
 
@@ -78,7 +90,7 @@ function getEmails(email, appPass) {
                     console.log(emails)
                     let emailsJson = JSON.stringify(emails)
                     console.log(emailsJson)
-                    fs.writeFile("emails.json", emailsJson, function(err, result) {
+                    fs.writeFile("./client/src/emails.json", emailsJson, function(err, result) {
                       if(err) console.log('error', err);
                     });
                 });
@@ -115,8 +127,17 @@ app.post('/api/world', (req, res) => {
     getEmails(email, pass)
   } else {
     emails = {}
-  }
-    
+  } 
+});
+// https://www.codingthesmartway.com/how-to-use-chatgpt-with-react/
+app.post("/chat", async (req, res) => {
+  const { prompt } = req.body;
+  const completion = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: prompt,
+    max_tokens: 1000,
+  });
+  res.send(completion.data.choices[0].text);
 });
 
 if (process.env.NODE_ENV === 'production') {

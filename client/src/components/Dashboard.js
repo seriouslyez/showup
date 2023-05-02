@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Event from "./Event";
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper'
@@ -12,11 +12,19 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Menu from '@mui/material/Menu';
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
+import { eventsContext } from '../components/EventsContext';
 
 export default function Dashboard() {
     // List of this week's events
-    let dashboardEvents = [1, 2, 3, 4, 5];
+    let dashboardEvents = [];
+    const [response, setResponse] = useContext(eventsContext);
     const categories = ['Educational', 'Parties', 'Clubs', 'Other'];
+    let defaultChecked = {};
+    for (let i = 0; i < categories.length; i++) {
+        defaultChecked[categories[i]] = false
+    }
+    const [checked, setChecked] = React.useState(defaultChecked);
+
     const [showFavorite, setFavorite] = useState(false);
     const [openedFull, setOpenFull] = useState(false);
     const openFull = (val) => {
@@ -26,6 +34,13 @@ export default function Dashboard() {
         setFavorite(!showFavorite)
     }
     
+    const clickSwitch = (event) => {
+        setChecked({
+          ...checked,
+          [event.target.id]: event.target.checked,
+        })
+      };
+      
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -34,6 +49,26 @@ export default function Dashboard() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    if (response != null) {
+        let filters = [];
+        if (Object.values(defaultChecked).every((v) => v === false)) {
+            filters = categories;
+        }
+        else {
+            for (const prop in defaultChecked) {
+                if (defaultChecked[prop]) {
+                    filters.push(prop)
+                }
+            }
+        }
+        for (let i = 0; i < response.length; i++) {
+            let d1 = new Date(response[i].date).getTime()
+            let d2 = new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
+            if (response[i].event && d1 < d2 && filters.includes(response[i].category)) {
+                dashboardEvents.push(response[i])
+            }
+        }
+    }
 
     return(
         <Stack direction="row" sx={{minWidth: 1000}}>
@@ -55,20 +90,20 @@ export default function Dashboard() {
             </Typography>
             <FormGroup sx={{ml:10}}>
             <FormControlLabel control={<Switch checked={showFavorite} onChange={handleFavorite}/>} 
-            label="Favorites only" />
+            label="Favorites only" /> 
             </FormGroup>
             <Button onClick={handleClick}>Filter by category</Button>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose} PaperProps={{sx: {pl:2}}}>
                 {categories.map((name) => 
                 <FormGroup sx={{}}>
-                <FormControlLabel control={<Switch/>} 
+                <FormControlLabel control={<Switch id={name} checked={checked[name]} onClick={clickSwitch}/>} 
                 label={name} />
                 </FormGroup>
                 )}
             </Menu>
             </Stack>
-            { dashboardEvents.map(() =>
-            <Event openFull={openFull} />
+            { dashboardEvents.map((dEvent) =>
+            <Event dEvent={dEvent} openFull={openFull} />
             )}
             </Stack>
         </Paper>

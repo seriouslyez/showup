@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -15,9 +15,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
-export default function Event({openFull}) {
+export default function Event({dEvent, openFull}) {
     const [expanded, setExpand] = useState(false);
     const [favorited, setFavorite] = useState(false);
+    let rendered = dEvent != undefined
+    console.log(dEvent)
 
     const handleExpand = () => {
         setExpand(!expanded);
@@ -48,11 +50,12 @@ export default function Event({openFull}) {
                     </Stack>
                     }
                     sx={{mb:-3}}
-                    title="Event Name"
+                    title={rendered ? dEvent.name : ''}
                     subheader={
                         <Stack sx={{pt:1}} direction="row" spacing = {1}>
-                        <Chip size="small" icon={<EventIcon/>} label="00/00/0000 00:00"/>
-                        <Chip size="small" icon ={<PlaceIcon/>} label="Event Location"/>
+                        <Chip size="small" icon={<EventIcon/>} label={rendered ? dEvent.date + '\xa0\xa0' + dEvent.time : ''}/>
+                        <Chip size="small" icon ={<PlaceIcon/>} label={rendered ? dEvent.location : ''}/>
+                        <Chip size="small" label={rendered ? dEvent.category : ''}/>
                         </Stack>
                     }
                 />
@@ -64,7 +67,7 @@ export default function Event({openFull}) {
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                 <Typography paragraph sx={{mt:-2}}>
-                    Event Description
+                    {rendered ? dEvent.summary : ''}
                 </Typography>
                 </CardContent>
             </Collapse>

@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import PanelEvent from "./PanelEvent";
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { eventsContext } from '../components/EventsContext';
 
 
 export default function EventList({ openEmail, name }) {
-    console.log(name)
     // Replace with an array containing filtered parsed events
-    const eventlist = [1, 2, 3];
-
+    const [response, setResponse] = useContext(eventsContext);
+    let eventlist = [];
+    for (let i = 0; i < response.length; i++) {
+        if (response[i].event && response[i].category.toLowerCase() == name.toLowerCase()){
+            eventlist.push(response[i])
+        }
+    }
     return(
         <div>
         <Stack>
@@ -16,8 +21,8 @@ export default function EventList({ openEmail, name }) {
             {name}
         </Typography>
         {
-            eventlist.map(() =>
-            <PanelEvent openEmail={openEmail}/>)
+            eventlist.map((Event) =>
+            <PanelEvent Event={Event} openEmail={openEmail}/>)
         }
         </Stack>
         </div>

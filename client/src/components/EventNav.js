@@ -41,7 +41,6 @@ export default function EventNav() {
         }
         setEventSelect(!selectedEvent);   
         setName(this_name);
-        console.log(this_name)
     }
     
     const openEmail = openedEmail => {
@@ -53,18 +52,10 @@ export default function EventNav() {
         <AppBar position="sticky"
         sx={{minWidth:300, maxWidth: 300, minHeight:"100vH", zIndex:100}} color="inherit" elevation={2}>
         <Stack sx={{pt: 5}} spacing={2}>
-            {/* <Button variant = "text" align="center">
-                <Typography variant="h4">
-                Dashboard
-                </Typography>
-            </Button> */}
-            {/* <Button variant = "text" align="center" onClick={handleNavAll}> */}
                 <Typography variant="h2" align="center" sx={{fontSize: 45, mb: 3}}>showUP</Typography>
                 <Typography variant="h4" align="center">
                 ALL EVENTS
                 </Typography>
-            {/* </Button> */}
-            {/* {selectedAll ?  */}
             <Stack spacing={2}>
                 {categories.map((name) => 
                     <Button variant = "text" align="center" onClick={()=>{handleEventSelect(name)}}>
@@ -74,7 +65,6 @@ export default function EventNav() {
                     </Button>
                 )}
             </Stack> 
-            {/* : ''} */}
             <Button sx={{pt: 25}} onClick={handleLogout}>
                 Log Out
             </Button>
