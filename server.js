@@ -17,11 +17,11 @@ const openai = new OpenAIApi(configuration);
 const app = express();
 const port = process.env.PORT || 5001;
 
-var cors = require('cors')
+const cors = require('cors')
 app.use(bodyParser.json());
 app.use(cors())
 
-let emails = {}
+let emails = []
 
 let email = '';
 let pass = '';
@@ -38,8 +38,44 @@ String.prototype.hashCode = function() {
   return hash;
 }
 
-const str = 'revenue'
-console.log(str, str.hashCode())
+let events = [];
+
+async function loadResponse (prompt, emailHash, body) {
+  await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: prompt,
+    max_tokens: 1000,
+  }).then((res) => {
+    let res1 = res.data.choices[0].text;
+    let apidata = res1.data[0];
+    apidata["id"] = id;
+    apidata["body"] = body; 
+    events.push(apidata); 
+  }).catch((err) => {
+    console.log(err);
+  })
+
+}
+let checkedHashes = []
+
+async function getEvents() {
+  for (let x of emails) {
+    if (!(x.hash in checkedHashes)) {
+      let prompt = `Return just a valid JSON array of objects for this email following this format: [{“event”: "a boolean of whether or not it is promoting an event with a date and location”,
+          "name":"Short title for event",
+          “date”: “Numeric Month/Day/2023 of event”,
+          "time": "Time of event",
+          “location”: “the location of the event”,
+          “summary”: “1- 2 sentence summary of the event”,
+          “category”: “the best matching category from educational, parties, clubs, or other”]` + x.text;
+      await loadResponse(prompt, x.hash, x.text)
+      .catch((err) => {
+        console.log(err)
+      })
+      checkedHashes.push(x.hash)
+    }
+  }
+}
 
 function getEmails(email, appPass) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
@@ -50,12 +86,13 @@ function getEmails(email, appPass) {
         port: 993,
         tls: true
         };
-
+        // current date - x number of days
+        // new Date(new Date().setDate(new Date().getDate()- 1)
     const imap = new Imap(imapConfig);
     imap.once('ready', () => {
         imap.openBox('INBOX', false, () => {
             console.log('Inbox opened');
-            imap.search(['UNSEEN', ['SINCE', new Date(new Date().setDate(new Date().getDate()- 7))]], (err, results) => {
+            imap.search(['UNSEEN', ['SINCE', new Date()]], (err, results) => {
                 const f = imap.fetch(results, {bodies: ''});
                 f.on('message', msg => {
                     msg.on('body', stream => {
@@ -63,8 +100,9 @@ function getEmails(email, appPass) {
                             let subject = parsed.subject
                             let hashSub = subject.hashCode()
                             
-                            if (!(hashSub in emails)) {
-                              emails[hashSub] =  [{date: parsed.date, subject: subject, text: parsed.text}]
+                            if (emails.filter(item=> item.hash == hashSub).length == 0) {
+                              let emailObj = {hash: hashSub, date: parsed.date, subject: subject, text: parsed.text}
+                              emails.push(emailObj)
                             }
                           });
                         });
@@ -87,10 +125,19 @@ function getEmails(email, appPass) {
                     imap.end();
                     console.log(emails)
                     let emailsJson = JSON.stringify(emails)
-                    console.log(emailsJson)
                     fs.writeFile("./client/src/emails.json", emailsJson, function(err, result) {
                       if(err) console.log('error', err);
                     });
+
+                    if(emails.length > 0 && emails.length > checkedHashes.length ) {
+                      getEvents()
+                      if (events.length > 0) {
+                        let eventsJson = JSON.stringify(events)
+                        fs.writeFile("./client/src/events.json", eventsJson, function(err, result) {
+                          if(err) console.log('error', err);
+                        });
+                      }
+                    }
                 });
             });
         });
@@ -105,6 +152,8 @@ function getEmails(email, appPass) {
 
     imap.connect();
 }
+
+console.log(events)
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
