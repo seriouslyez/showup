@@ -14,14 +14,9 @@ export default function EventNav() {
     const navigate = useNavigate();
     // List of event categories (preset)
     const categories = ['Academic', 'Parties', 'Extracurricular', 'Other'];
-    // const [selectedAll, setNavAll] = useState(false);
     const [selectedEvent, setEventSelect] = useState(false);
     const [openedEmail, setOpen] = useState(false);
     const [curr_name, setName] = useState('');
-
-    // const handleNavAll = () => {
-    //     setNavAll(!selectedAll);   
-    // }
 
     async function handleLogout() {
         navigate('/');

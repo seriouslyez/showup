@@ -9,6 +9,8 @@ import { eventsContext } from '../components/EventsContext';
 export default function Home() {
     let events = [];
     const [response, setResponse] = useState(null);
+
+    // Get data from openai; adapted from https://www.codingthesmartway.com/how-to-use-chatgpt-with-react/
     const loadResponse = (prompt, id, text) => {
         axios
         .post("/chat", { prompt })
@@ -28,11 +30,12 @@ export default function Home() {
     for (var prop in emails) {
         // Email hasn't been previously recorded 
         if (events.find((elt) => elt["id"] == prop) == undefined) {
-            // Parse from AI
+            // Parse email and generate a json with relevant properties using openai
             if (emails[prop][0].text != undefined) {
                 let text = emails[prop][0].text
                 text = text.replace(/\s\s+/g, ' ');
                 text = text.substring(0, 2000);
+                // Concept -> Category action: affix/remove
                 let prompt = `Return just a valid JSON array of objects for this email`+ text + `following this format: [{“event”: "a boolean of whether or not it is promoting an event with a date and location”,
                 "name":"Short title for event",
                 “date”: “Numeric Month/Day/2023 of event”,

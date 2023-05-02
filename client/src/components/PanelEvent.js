@@ -42,23 +42,29 @@ export default function PanelEvent({Event, openEmail }) {
                 <CardHeader
                     action={
                     <Stack direction="row" spacing={-1} sx={{ml:-15}}>
+                         {/* To be implemented: save event to favorites*/}
+                        {/* Concept -> Event action: save */}
                         {/* <IconButton 
                         onMouseDown={(event) => event.stopPropagation()}
-                        onClick={handleFavorite}>
+                        onClick={(event) => {event.stopPropagation(); handleFavorite()}}>
                             {favorited ? <FavoriteIcon/> : <FavBorderIcon/>}
-                        </IconButton>
-                        <IconButton onMouseDown={(event) => event.stopPropagation()}
-                        onClick={removeEvent}>
+                        </IconButton> */}
+
+                        {/* To be implemented: remove event from display*/}
+                        {/* Concept -> Event action: ignore */}
+                        {/*<IconButton onMouseDown={(event) => event.stopPropagation()}
+                        onClick={(event) => {event.stopPropagation()}}>
                             <NotInterestedIcon/>
                         </IconButton> */}
                         {/* <IconButton onMouseDown={(event) => event.stopPropagation()}
-                        onClick={handleOpenEmail}>
+                        onClick={(event) => {event.stopPropagation(); openFull(true)}}>
                             <MailOutlineIcon/>
                         </IconButton> */}
                     </Stack>
                     }
                     sx={{mb:-3}}
                     title={<Typography variant="h6"> {Event.name}</Typography>}
+                    // Concept -> Event state: labeled
                     subheader={
                         <Stack sx={{pt:1}} direction="row" spacing = {1}>
                         <Chip size="small" icon={<EventIcon/>} label={Event.date + '\xa0\xa0' + Event.time}/>
@@ -66,18 +72,15 @@ export default function PanelEvent({Event, openEmail }) {
                         </Stack>
                     }
                 />
-                {/* {!expanded ?  */}
                 <CardContent>
-                    {/* <Typography paragraph>
-                        Event Description
-                    </Typography> */}
+                <Typography paragraph sx={{mt:0}}>
+                    {Event.summary}
+                </Typography>
                 </CardContent>
-                {/* // :''} */}
+                {/* Concept -> Event state: expanded */}
+                {/* Concept -> Event action: getDetails */}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                <Typography paragraph sx={{mt:-2}}>
-                    Summary: {Event.summary}
-                </Typography>
                 <Typography paragraph>
                     Full Email: {Event.body}
                 </Typography>

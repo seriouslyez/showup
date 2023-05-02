@@ -6,7 +6,7 @@ import { eventsContext } from '../components/EventsContext';
 
 
 export default function EventList({ openEmail, name }) {
-    // Replace with an array containing filtered parsed events
+    // Replace with an array containing events corresponding to category 'name'
     const [response, setResponse] = useContext(eventsContext);
     let eventlist = [];
     if (response != null) {
@@ -16,9 +16,17 @@ export default function EventList({ openEmail, name }) {
             }
         }
     }
+    // Sort events in chronological order
+    eventlist.sort(function(a, b) {
+        var c = new Date(a.date);
+        var d = new Date(b.date);
+        return c-d;
+    });
     return(
         <div>
         <Stack>
+        {/* Concept -> Category state: categories (set of all defined categories) */}
+        {/* Concept -> Category action: rename -- not yet implemented (will allow users to rename onClick) */}
         <Typography variant = "h5" align="center">
             {name}
         </Typography>

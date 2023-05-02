@@ -17,10 +17,14 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 
 export default function Dashboard() {
     // List of this week's events
+    // Concept -> Dashboard state: empty/filled 
     let dashboardEvents = [];
     let dashboardFilled = false;
     const [response, setResponse] = useContext(eventsContext);
+
+    // Concept -> Category state: categories (set of all defined categories)
     const categories = ['Academic', 'Parties', 'Extracurricular', 'Other'];
+    // Concept -> Dashboard action: filter (work-in-progress)
     let defaultChecked = {};
     for (let i = 0; i < categories.length; i++) {
         defaultChecked[categories[i]] = false
@@ -32,6 +36,9 @@ export default function Dashboard() {
     const openFull = (val) => {
         setOpenFull(val)
     }
+
+    // Concept -> Dashboard action: filter
+    // Favorite events
     const handleFavorite = () => {
         setFavorite(!showFavorite)
     }
@@ -46,14 +53,13 @@ export default function Dashboard() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
-        console.log(dashboardFilled)
-        console.log(dashboardEvents)
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
     if (response != null) {
+        // Concept -> Dashboard state: filtered, action: filter
         // let filters = [];
         // if (Object.values(defaultChecked).every((v) => v === false)) {
         //     filters = categories;
@@ -65,15 +71,22 @@ export default function Dashboard() {
         //         }
         //     }
         // }
-        // console.log(filters);
+        
+        // Add events that are within a week from today to the dashboard
+        // Concept -> Dashboard action: fill, state: empty/filled
         for (let i = 0; i < response.length; i++) {
             let d1 = new Date(response[i].date).getTime()
             let d2 = new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
-            if (response[i].event && d1 < d2 
+            if (response[i].event && d1 < d2 && d1 >= new Date().getTime()
                 // && filters.includes(response[i].category)
                 ) {
                 dashboardEvents.push(response[i])
                 dashboardFilled = dashboardEvents != [];
+                dashboardEvents.sort(function(a, b) {
+                    var c = new Date(a.date);
+                    var d = new Date(b.date);
+                    return c-d;
+                });
             }
         }
     }
@@ -97,10 +110,14 @@ export default function Dashboard() {
             <Typography variant="h2" sx={{fontSize:30, ml:1}}>
                 Your week at a glance...
             </Typography>
+            {/* Concept -> Dashboard action: filter */}
+            {/* Switch to filter for favorited */}
             {/* <FormGroup sx={{ml:10}}> */}
             {/* <FormControlLabel control={<Switch checked={showFavorite} onChange={handleFavorite}/>} 
             label="Favorites only" /> 
             </FormGroup> */}
+            
+            {/* Concept -> Dashboard action: refresh */}
             <IconButton sx={{ml:30}} onClick={handleClick}><RefreshIcon/>Refresh</IconButton>
             {/* <Menu anchorEl={anchorEl} open={open} onClose={handleClose} PaperProps={{sx: {pl:2}}}>
                 {categories.map((name) => 
@@ -111,6 +128,7 @@ export default function Dashboard() {
                 )}
             </Menu> */}
             </Stack>
+            {/* Concept -> Dashboard state: empty/filled */}
             {dashboardFilled ? dashboardEvents.map((dEvent) =>
             <Event dEvent={dEvent} openFull={openFull} />
             ) : ''}

@@ -34,12 +34,17 @@ export default function Event({dEvent, openFull}) {
                 <CardHeader
                     action={
                     <Stack direction="row" spacing={-1} sx={{ml:-15}}>
+                        {/* To be implemented: save event to favorites*/}
+                        {/* Concept -> Event action: save */}
                         {/* <IconButton 
                         onMouseDown={(event) => event.stopPropagation()}
                         onClick={(event) => {event.stopPropagation(); handleFavorite()}}>
                             {favorited ? <FavoriteIcon/> : <FavBorderIcon/>}
-                        </IconButton>
-                        <IconButton onMouseDown={(event) => event.stopPropagation()}
+                        </IconButton> */}
+
+                        {/* To be implemented: remove event from display*/}
+                        {/* Concept -> Event action: ignore */}
+                        {/*<IconButton onMouseDown={(event) => event.stopPropagation()}
                         onClick={(event) => {event.stopPropagation()}}>
                             <NotInterestedIcon/>
                         </IconButton> */}
@@ -51,6 +56,7 @@ export default function Event({dEvent, openFull}) {
                     }
                     sx={{mb:-3}}
                     title={rendered ? dEvent.name : ''}
+                    // Concept -> Event state: labeled
                     subheader={
                         <Stack sx={{pt:1}} direction="row" spacing = {1}>
                         <Chip size="small" icon={<EventIcon/>} label={rendered ? dEvent.date + '\xa0\xa0' + dEvent.time : ''}/>
@@ -60,15 +66,15 @@ export default function Event({dEvent, openFull}) {
                     }
                 />
                 <CardContent>
-                    {/* <Typography paragraph>
-                        Event Description
-                    </Typography> */}
+                    <Typography paragraph sx={{mt:0}}>
+                        {rendered ? dEvent.summary : ''}
+                    </Typography>
                 </CardContent>
+            {/* Concept -> Event action: getDetails */}
+            {/* Concept -> Event state: expanded */}
+            {/* Expand to show tab with information about the event */}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                <Typography paragraph sx={{mt:-2}}>
-                    Summary: {rendered ? dEvent.summary : ''}
-                </Typography>
                 <Typography paragraph>
                     Full Email: {rendered ? dEvent.body : ''}
                 </Typography>
