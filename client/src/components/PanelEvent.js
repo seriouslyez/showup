@@ -37,12 +37,12 @@ export default function PanelEvent({Event, openEmail }) {
     }
 
     return (
-        <Card sx={{ minWidth: 500, maxWidth: 500, m:2, pl: 1}} elevation={4}>
+        <Card sx={{ minWidth: 800, maxWidth: 700, m:2, pl: 1}} elevation={4}>
             <CardActionArea onClick={handleExpand} disableRipple>
                 <CardHeader
                     action={
                     <Stack direction="row" spacing={-1} sx={{ml:-15}}>
-                        <IconButton 
+                        {/* <IconButton 
                         onMouseDown={(event) => event.stopPropagation()}
                         onClick={handleFavorite}>
                             {favorited ? <FavoriteIcon/> : <FavBorderIcon/>}
@@ -50,11 +50,11 @@ export default function PanelEvent({Event, openEmail }) {
                         <IconButton onMouseDown={(event) => event.stopPropagation()}
                         onClick={removeEvent}>
                             <NotInterestedIcon/>
-                        </IconButton>
-                        <IconButton onMouseDown={(event) => event.stopPropagation()}
+                        </IconButton> */}
+                        {/* <IconButton onMouseDown={(event) => event.stopPropagation()}
                         onClick={handleOpenEmail}>
                             <MailOutlineIcon/>
-                        </IconButton>
+                        </IconButton> */}
                     </Stack>
                     }
                     sx={{mb:-3}}
@@ -76,7 +76,10 @@ export default function PanelEvent({Event, openEmail }) {
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                 <Typography paragraph sx={{mt:-2}}>
-                    {Event.summary}
+                    Summary: {Event.summary}
+                </Typography>
+                <Typography paragraph>
+                    Full Email: {Event.body}
                 </Typography>
                 </CardContent>
             </Collapse>

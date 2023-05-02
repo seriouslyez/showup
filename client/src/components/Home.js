@@ -9,39 +9,41 @@ import { eventsContext } from '../components/EventsContext';
 export default function Home() {
     let events = [];
     const [response, setResponse] = useState(null);
-    const loadResponse = (prompt, id, body) => {
+    const loadResponse = (prompt, id, text) => {
         axios
         .post("/chat", { prompt })
         .then((res) => {
             let apidata = res.data[0];
-            apidata["id"] = id;
-            apidata["body"] = body;
-            events.push(apidata);
-            setResponse(events);
+            if (apidata != "\n" && apidata != undefined){
+                apidata["id"] = id;
+                apidata["body"] = text;
+                events.push(apidata);
+                setResponse(events);
+            }
         })
         .catch((err) => {
             console.error(err);
         });
     };
-    let count = 0
     for (var prop in emails) {
         // Email hasn't been previously recorded 
-        if (count == 0) {
-        // if (events.find((elt) => elt.id == prop) == undefined) {
+        if (events.find((elt) => elt["id"] == prop) == undefined) {
             // Parse from AI
-            count += 1;
-            let prompt = `Return just a valid JSON array of objects for this email`+ emails[prop][0].text + `following this format: [{“event”: "a boolean of whether or not it is promoting an event with a date and location”,
-            "name":"Short title for event",
-            “date”: “Numeric Month/Day/2023 of event”,
-            "time": "Time of event",
-            “location”: “the location of the event”,
-            “summary”: “1- 2 sentence summary of the event”,
-            “category”: “the best matching category from educational, parties, clubs, or other”]`;
-            loadResponse(prompt, prop, emails[prop][0].text);
+            if (emails[prop][0].text != undefined) {
+                let text = emails[prop][0].text
+                text = text.replace(/\s\s+/g, ' ');
+                text = text.substring(0, 2000);
+                let prompt = `Return just a valid JSON array of objects for this email`+ text + `following this format: [{“event”: "a boolean of whether or not it is promoting an event with a date and location”,
+                "name":"Short title for event",
+                “date”: “Numeric Month/Day/2023 of event”,
+                "time": "Time of event",
+                “location”: “the location of the event”,
+                “summary”: “1- 2 sentence summary of the event”,
+                “category”: “the best matching category from academic, parties, extracurricular, or other”]`;
+                loadResponse(prompt, prop, emails[prop][0].text);
+            }
         }
     }
-
-    console.log(events)
 
     return (
         <div>

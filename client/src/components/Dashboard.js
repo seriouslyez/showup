@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Event from "./Event";
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper'
@@ -13,12 +13,14 @@ import Menu from '@mui/material/Menu';
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import { eventsContext } from '../components/EventsContext';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 export default function Dashboard() {
     // List of this week's events
     let dashboardEvents = [];
+    let dashboardFilled = false;
     const [response, setResponse] = useContext(eventsContext);
-    const categories = ['Educational', 'Parties', 'Clubs', 'Other'];
+    const categories = ['Academic', 'Parties', 'Extracurricular', 'Other'];
     let defaultChecked = {};
     for (let i = 0; i < categories.length; i++) {
         defaultChecked[categories[i]] = false
@@ -44,37 +46,44 @@ export default function Dashboard() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
+        console.log(dashboardFilled)
+        console.log(dashboardEvents)
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
     if (response != null) {
-        let filters = [];
-        if (Object.values(defaultChecked).every((v) => v === false)) {
-            filters = categories;
-        }
-        else {
-            for (const prop in defaultChecked) {
-                if (defaultChecked[prop]) {
-                    filters.push(prop)
-                }
-            }
-        }
+        // let filters = [];
+        // if (Object.values(defaultChecked).every((v) => v === false)) {
+        //     filters = categories;
+        // }
+        // else {
+        //     for (const prop in defaultChecked) {
+        //         if (defaultChecked[prop]) {
+        //             filters.push(prop)
+        //         }
+        //     }
+        // }
+        // console.log(filters);
         for (let i = 0; i < response.length; i++) {
             let d1 = new Date(response[i].date).getTime()
             let d2 = new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
-            if (response[i].event && d1 < d2 && filters.includes(response[i].category)) {
+            if (response[i].event && d1 < d2 
+                // && filters.includes(response[i].category)
+                ) {
                 dashboardEvents.push(response[i])
+                dashboardFilled = dashboardEvents != [];
             }
         }
     }
+    
 
     return(
         <Stack direction="row" sx={{minWidth: 1000}}>
         <Stack>
         <Typography variant="h2" sx={{ml:5, mt:5, fontSize:40}}>
-            Hi User! Looks like you've got a busy week ahead. &#128064;
+            Hi there! Looks like you've got a busy week ahead. &#128064;
         </Typography>
         <Paper sx={{maxWidth:"55vw", maxHeight:"70vh", overflow:"auto", 
         pt: 3,
@@ -88,23 +97,23 @@ export default function Dashboard() {
             <Typography variant="h2" sx={{fontSize:30, ml:1}}>
                 Your week at a glance...
             </Typography>
-            <FormGroup sx={{ml:10}}>
-            <FormControlLabel control={<Switch checked={showFavorite} onChange={handleFavorite}/>} 
+            {/* <FormGroup sx={{ml:10}}> */}
+            {/* <FormControlLabel control={<Switch checked={showFavorite} onChange={handleFavorite}/>} 
             label="Favorites only" /> 
-            </FormGroup>
-            <Button onClick={handleClick}>Filter by category</Button>
-            <Menu anchorEl={anchorEl} open={open} onClose={handleClose} PaperProps={{sx: {pl:2}}}>
+            </FormGroup> */}
+            <IconButton sx={{ml:30}} onClick={handleClick}><RefreshIcon/>Refresh</IconButton>
+            {/* <Menu anchorEl={anchorEl} open={open} onClose={handleClose} PaperProps={{sx: {pl:2}}}>
                 {categories.map((name) => 
                 <FormGroup sx={{}}>
                 <FormControlLabel control={<Switch id={name} checked={checked[name]} onClick={clickSwitch}/>} 
                 label={name} />
                 </FormGroup>
                 )}
-            </Menu>
+            </Menu> */}
             </Stack>
-            { dashboardEvents.map((dEvent) =>
+            {dashboardFilled ? dashboardEvents.map((dEvent) =>
             <Event dEvent={dEvent} openFull={openFull} />
-            )}
+            ) : ''}
             </Stack>
         </Paper>
         </Stack>

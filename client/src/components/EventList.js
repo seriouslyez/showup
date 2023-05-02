@@ -9,9 +9,11 @@ export default function EventList({ openEmail, name }) {
     // Replace with an array containing filtered parsed events
     const [response, setResponse] = useContext(eventsContext);
     let eventlist = [];
-    for (let i = 0; i < response.length; i++) {
-        if (response[i].event && response[i].category.toLowerCase() == name.toLowerCase()){
-            eventlist.push(response[i])
+    if (response != null) {
+        for (let i = 0; i < response.length; i++) {
+            if (response[i].event && response[i].category.toLowerCase() == name.toLowerCase()){
+                eventlist.push(response[i])
+            }
         }
     }
     return(

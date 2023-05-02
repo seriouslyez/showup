@@ -34,7 +34,7 @@ export default function Event({dEvent, openFull}) {
                 <CardHeader
                     action={
                     <Stack direction="row" spacing={-1} sx={{ml:-15}}>
-                        <IconButton 
+                        {/* <IconButton 
                         onMouseDown={(event) => event.stopPropagation()}
                         onClick={(event) => {event.stopPropagation(); handleFavorite()}}>
                             {favorited ? <FavoriteIcon/> : <FavBorderIcon/>}
@@ -42,11 +42,11 @@ export default function Event({dEvent, openFull}) {
                         <IconButton onMouseDown={(event) => event.stopPropagation()}
                         onClick={(event) => {event.stopPropagation()}}>
                             <NotInterestedIcon/>
-                        </IconButton>
-                        <IconButton onMouseDown={(event) => event.stopPropagation()}
+                        </IconButton> */}
+                        {/* <IconButton onMouseDown={(event) => event.stopPropagation()}
                         onClick={(event) => {event.stopPropagation(); openFull(true)}}>
                             <MailOutlineIcon/>
-                        </IconButton>
+                        </IconButton> */}
                     </Stack>
                     }
                     sx={{mb:-3}}
@@ -67,7 +67,10 @@ export default function Event({dEvent, openFull}) {
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                 <Typography paragraph sx={{mt:-2}}>
-                    {rendered ? dEvent.summary : ''}
+                    Summary: {rendered ? dEvent.summary : ''}
+                </Typography>
+                <Typography paragraph>
+                    Full Email: {rendered ? dEvent.body : ''}
                 </Typography>
                 </CardContent>
             </Collapse>

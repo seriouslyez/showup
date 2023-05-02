@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 export default function EventNav() {
     const navigate = useNavigate();
     // List of event categories (preset)
-    const categories = ['Educational', 'Parties', 'Clubs', 'Other'];
+    const categories = ['Academic', 'Parties', 'Extracurricular', 'Other'];
     // const [selectedAll, setNavAll] = useState(false);
     const [selectedEvent, setEventSelect] = useState(false);
     const [openedEmail, setOpen] = useState(false);
@@ -72,7 +72,7 @@ export default function EventNav() {
         </AppBar>
         <Slide direction="right" in={selectedEvent} mountOnEnter unmountOnExit>
         <AppBar position="sticky"
-        sx={{maxWidth: 600, minHeight:"100vH", pl:4, pt:2, zIndex:99}} color="inherit" elevation={2}>
+        sx={{maxWidth: 1000, minHeight:"100vH", pl:4, pt:2, zIndex:99}} color="inherit" elevation={2}>
             <EventList name={curr_name} openEmail={openEmail}/>
         </AppBar>
         </Slide>
@@ -83,7 +83,7 @@ export default function EventNav() {
                 <ArrowBackIosNewIcon/>
             </IconButton>
             <Typography variant="h2" align="center">
-                Email
+                Email 
             </Typography>
         </AppBar>
         </Slide>
