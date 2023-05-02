@@ -29,8 +29,6 @@ String.prototype.hashCode = function() {
 const str = 'revenue'
 console.log(str, str.hashCode())
 
-
-
 function getEmails(email, appPass) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
     let imapConfig = {
